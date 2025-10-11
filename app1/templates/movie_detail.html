@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>{{ movie.MovieTitle }}</title></head>
+<body>
+  <h1>{{ movie.MovieTitle }}</h1>
+  <p><b>Actors:</b> {{ movie.Actor1Name }}{% if movie.Actor2Name %}, {{ movie.Actor2Name }}{% endif %}</p>
+  <p><b>Director:</b> {{ movie.DirectorName }}</p>
+  <p><b>Genre:</b> {{ movie.MovieGenre }}</p>
+  <p><b>Release Year:</b> {{ movie.ReleaseYear }}</p>
+  <p>
+    <a href="{% url 'movie_update' movie.pk %}">Edit</a> |
+    <a href="{% url 'movie_delete' movie.pk %}">Delete</a> |
+    <a href="{% url 'movie_list' %}">Back</a>
+  </p>
+</body>
+</html>
