@@ -7,6 +7,7 @@ pipeline {
     DOCKER_HOST = 'tcp://127.0.0.1:54578'
     DOCKER_CERT_PATH = 'C:\\SPB_Data\\.minikube\\certs'
     MINIKUBE_ACTIVE_DOCKERD = 'minikube'
+    KUBECONFIG = 'C:\\SPB_Data\\.kube\\config'
   }
   
   triggers {
