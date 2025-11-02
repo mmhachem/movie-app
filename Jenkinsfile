@@ -1,44 +1,39 @@
 pipeline {
   agent any
-
   triggers {
     // Poll GitHub every 2 minutes
     pollSCM('H/2 * * * *')
   }
-
   stages {
-
     stage('Checkout') {
       steps {
         git branch: 'main', url: 'https://github.com/mmhachem/movie-app.git'
       }
     }
-
     stage('Build in Minikube Docker') {
       steps {
-        bat '''
-            REM === Switch Docker to Minikube Docker ===
-            @FOR /f "tokens=*" %%i IN ('minikube docker-env --shell cmd') DO @%%i
+        powershell '''
+            # Get Minikube Docker environment variables
+            $env_output = minikube docker-env --shell powershell | Out-String
             
-            REM === Build Django image inside Minikube Docker ===
+            # Execute the environment setup
+            Invoke-Expression $env_output
+            
+            # Build the Docker image
             docker build -t mydjangoapp:latest .
         '''
       }
     }
-
     
-
     stage('Deploy to Minikube') {
       steps {
         bat '''
         REM === Apply the updated deployment manifest ===
         kubectl apply -f deployment.yaml
-
         REM === Ensure the rollout completes ===
         kubectl rollout status deployment/django-deployment
         '''
       }
     }
-
   }
 }
