@@ -22,10 +22,12 @@ pipeline {
         call docker_env.bat
 
         REM === Build Django image inside Minikube Docker ===
-        docker build -t mydjangoapp:latest .
+        docker build --platform linux/amd64 -t mydjangoapp:latest .
         '''
       }
     }
+
+    
 
     stage('Deploy to Minikube') {
       steps {
