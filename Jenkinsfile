@@ -1,8 +1,18 @@
 pipeline {
   agent any
+  
+  environment {
+    MINIKUBE_HOME = 'C:\\SPB_Data'
+    DOCKER_TLS_VERIFY = '1'
+    DOCKER_HOST = 'tcp://127.0.0.1:54578'
+    DOCKER_CERT_PATH = 'C:\\SPB_Data\\.minikube\\certs'
+    MINIKUBE_ACTIVE_DOCKERD = 'minikube'
+  }
+  
   triggers {
     pollSCM('H/2 * * * *')
   }
+  
   stages {
     stage('Checkout') {
       steps {
@@ -10,22 +20,10 @@ pipeline {
       }
     }
     
-    stage('Start Minikube') {
-      steps {
-        bat '''
-            REM Check if Minikube is running
-            minikube status || minikube start --driver=docker
-        '''
-      }
-    }
-    
     stage('Build in Minikube Docker') {
       steps {
         bat '''
-            REM Set Minikube Docker environment
-            @FOR /f "tokens=*" %%i IN ('minikube docker-env --shell cmd ^| findstr "^SET"') DO @%%i
-            
-            REM Build the Docker image
+            REM Build the Docker image using YOUR running Minikube
             docker build -t mydjangoapp:latest .
         '''
       }
