@@ -17,12 +17,11 @@ pipeline {
     stage('Build in Minikube Docker') {
       steps {
         bat '''
-        REM === Switch Docker to Minikube Docker ===
-        call minikube docker-env --shell=cmd > docker_env.bat
-        call docker_env.bat
-
-        REM === Build Django image inside Minikube Docker ===
-        docker build --platform linux/amd64 -t mydjangoapp:latest .
+            REM === Switch Docker to Minikube Docker ===
+            @FOR /f "tokens=*" %%i IN ('minikube docker-env --shell cmd') DO @%%i
+            
+            REM === Build Django image inside Minikube Docker ===
+            docker build -t mydjangoapp:latest .
         '''
       }
     }
